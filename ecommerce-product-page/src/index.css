@@ -16,6 +16,10 @@ body {
   font-family: "Kumbh Sans", sans-serif;
 }
 
+button {
+  cursor: pointer;
+}
+
 .rounded-btn {
   border: none;
   border-radius: 100%;
