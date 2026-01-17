@@ -1,38 +1,71 @@
-export default async function GetIPAddressInfo(ipAddress = "", domain = "") {
+export default async function GetIPAddressInfo(input, setIsLoading) {
   try {
     const url = import.meta.env.VITE_IP_API_URL;
     const apiKey = import.meta.env.VITE_API_KEY;
 
-    const data = await fetch(
-      `${url}apiKey=${apiKey}&ipAddress=${ipAddress}&domain=${domain}`
+    let domainInp = "";
+    let addressInp = "";
+
+    if (input) {
+      const cleaned = input
+        .replace(/^https?:\/\//, "")
+        .replace(/\/$/, "")
+        .split("/")[0];
+
+      const domainRegex =
+        /^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+
+      console.log(input);
+      console.log(domainRegex.test(cleaned));
+      console.log(cleaned);
+
+      if (domainRegex.test(cleaned)) domainInp = cleaned;
+      else addressInp = cleaned;
+    }
+
+    setIsLoading(true);
+
+    const res = await fetch(
+      `${url}apiKey=${apiKey}&ipAddress=${addressInp}&domain=${domainInp}`,
     );
-    const res = await data.json();
 
-    if (!res) return;
+    if (!res.ok) throw new Error("Something went wrong. Try again!");
 
-    const region = res.location.region
-      .split(" ")
-      .map((el) => el[0])
-      .join("");
+    const data = await res.json();
+
+    const testRegion = data.location.region.split(" ");
+
+    const region =
+      testRegion.length > 1
+        ? testRegion.map((el) => el[0]).join("")
+        : testRegion.join("").slice(0, 2).toUpperCase();
+
+    console.log(data);
 
     const orgData = {
-      ipAddress: res.ip || "",
-      city: res.location.city || "",
-      countryCode: res.location.postalCode || "",
+      ipAddress: data.ip || "",
+      city: data.location.city || "",
+
       region,
-      serviceProvider: res.isp || "",
-      timeZone: res.location.timezone || "",
-      coords: [res.location.lat, res.location.lng],
+      serviceProvider: data.isp || "",
+      timeZone: data.location.timezone || "",
+      coords: [data.location.lat, data.location.lng],
     };
 
+    console.log(orgData);
     return orgData;
   } catch (error) {
     console.error(error);
     throw error;
+  } finally {
+    setIsLoading(false);
   }
 }
 
+// export function mapView(el, coords = "") {
 
-export default function mapView(el, ){
+// }
 
-}
+// function cleanInputValue(input, domainInp, addressInp){
+
+// }
