@@ -25,17 +25,17 @@ export function Input({
 }) {
   return (
     <form onSubmit={(e) => e.preventDefault()}>
-      <div className=" h-full flex items-center justify-center ">
+      <div className=" h-full flex items-center justify-center cursor-pointer">
         <input
           type="text"
           placeholder="Search for any IP address or domain"
-          className="text-gray-400 py-3 border-0 rounded-xl rounded-r-none px-5 bg-white w-[30%] "
+          className="py-3 border-0 rounded-xl rounded-r-none px-5 bg-white w-[70%] sm:w-[30%] text-gray-950 "
           onChange={(e) => setUserInput(e.target.value)}
           value={userInput}
         />
         <button
           type="submit"
-          className="bg-gray-950 px-5 h-12 border-0 rounded-r-xl"
+          className="bg-gray-950 px-5 h-12 border-0 rounded-r-xl cursor-pointer"
           onClick={async () =>
             setLocData(await GetIPAddressInfo(input, setIsLoading))
           }
@@ -59,7 +59,7 @@ export function LocationDetails({ obj, isLoading }) {
   ];
 
   return (
-    <div className="bg-white flex divide-x gap-5 divide-gray-400 text-left justify-between p-10 border-0 rounded-2xl w-[70%] mx-auto absolute left-1/2 -translate-x-1/2 top-54 z-1000">
+    <div className="bg-white flex flex-col items-center py-5 text-center gap-3 text-xl sm:gap-0 sm:flex-row   sm:divide-x  divide-gray-400 sm:text-left justify-between sm:px-5 sm:py-8 lg:p-10 border-0 rounded-2xl  w-[80%] sm:w-[70%] mx-auto absolute left-1/2 -translate-x-1/2 top-54 z-1000">
       {details.map((obj) => (
         <DetailList key={obj.title} obj={obj} isLoading={isLoading} />
       ))}
@@ -69,9 +69,9 @@ export function LocationDetails({ obj, isLoading }) {
 
 function DetailList({ obj, isLoading }) {
   return (
-    <div className="space-y-3 basis-1/4">
+    <div className=" space-y-2 sm:space-y-3 basis-1/4 px-3">
       <p className="text-xs font-bold text-gray-400">{obj.title}</p>
-      <p className="text-gray-950 font-bold text-2xl">
+      <p className="text-gray-950 font-bold sm:text-lg lg:text-2xl">
         {isLoading ? "--" : obj.data}
       </p>
     </div>
